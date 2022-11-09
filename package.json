@@ -1,0 +1,30 @@
+{
+  "name": "mesto-backend",
+  "version": "1.0.0",
+  "description": "Проект Mesto фронтенд + бэкенд",
+  "main": "app.js",
+  "scripts": {
+    "start": "cross-env PORT=3000 node app.js",
+    "dev": "cross-env PORT=3000 nodemon app.js",
+    "lint": "npx eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theAshbringer/express-mesto-gha.git"
+  },
+  "author": "theAshbringer",
+  "license": "ISC",
+  "homepage": "https://github.com/theAshbringer/express-mesto-gha",
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "eslint": "^8.27.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "express": "^4.18.2",
+    "mongoose": "^6.7.2",
+    "nodemon": "^2.0.20"
+  }
+}
