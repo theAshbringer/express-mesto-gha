@@ -10,6 +10,6 @@
     "sourceType": "module"
   },
   "rules": {
-    "eol-last": "off"
+    "linebreak-style": "off"
   }
 }
