@@ -9,6 +9,13 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+  req.user = {
+    _id: '636be555be4bd456aab78311',
+  };
+
+  next();
+});
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
