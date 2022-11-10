@@ -21,3 +21,11 @@ module.exports.getUserById = (req, res) => {
     .then((user) => res.status(200).send(user))
     .catch((err) => res.status(500).send({ message: err.message }));
 };
+
+module.exports.updateProfile = (req, res) => {
+  const { name, about } = req.body;
+
+  User.findOneAndUpdate({ _id: req.user._id }, { name, about })
+    .then((user) => res.status(200).send(user))
+    .catch((err) => res.status(500).send({ message: err.message }));
+};
