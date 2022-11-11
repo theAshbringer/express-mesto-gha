@@ -29,3 +29,11 @@ module.exports.likeCard = (req, res) => {
     .then((card) => res.status(200).send({ likes: card.likes }))
     .catch((err) => res.status(500).send({ message: err.message }));
 };
+
+module.exports.dislikeCard = (req, res) => {
+  const { cardId } = req.params;
+
+  Card.findByIdAndUpdate(cardId, { $pull: { likes: req.user._id } }, { returnDocument: 'after' })
+    .then((card) => res.status(200).send({ likes: card.likes }))
+    .catch((err) => res.status(500).send({ message: err.message }));
+};
