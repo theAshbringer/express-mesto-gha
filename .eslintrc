@@ -11,6 +11,12 @@
   },
   "rules": {
     "linebreak-style": "off",
-    "no-underscore-dangle": "off"
+    "no-underscore-dangle": "off",
+    "max-len": [
+      "warn",
+      {
+        "code": 100
+      }
+    ]
   }
 }

@@ -1,39 +1,50 @@
 const Card = require('../models/card');
+const { SUCCESS, CREATED } = require('../utils/constants');
+const { throwMessage, throwDefaultError } = require('../utils/common');
+const { handleLikeError, handleDeleteCardError, handleCreateCardError } = require('../utils/cards');
 
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
 
   Card.create({ name, link, owner: req.user })
-    .then((newCard) => res.status(201).send(newCard))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .then((newCard) => res.status(CREATED).send(newCard))
+    .catch((err) => handleCreateCardError(err, res));
 };
 
 module.exports.getCards = (req, res) => {
   Card.find({})
-    .then((cards) => res.status(200).send(cards))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .then((cards) => res.status(SUCCESS).send(cards))
+    .catch((err) => throwDefaultError(res, err));
 };
 
 module.exports.deleteCard = (req, res) => {
   const { cardId } = req.params;
 
   Card.deleteOne({ _id: cardId })
-    .then(() => res.status(200).send({ message: 'Пост удалён' }))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .then((ans) => res.status(SUCCESS).send(throwMessage(ans)))
+    .catch((err) => handleDeleteCardError(err, res));
 };
 
 module.exports.likeCard = (req, res) => {
   const { cardId } = req.params;
 
-  Card.findByIdAndUpdate(cardId, { $addToSet: { likes: req.user._id } }, { returnDocument: 'after' })
-    .then((card) => res.status(200).send({ likes: card.likes }))
-    .catch((err) => res.status(500).send({ message: err.message }));
+  Card.findByIdAndUpdate(
+    cardId,
+    { $addToSet: { likes: req.user._id } },
+    { returnDocument: 'after' },
+  )
+    .then((card) => res.status(SUCCESS).send({ likes: card.likes }))
+    .catch((err) => handleLikeError(err, res));
 };
 
 module.exports.dislikeCard = (req, res) => {
   const { cardId } = req.params;
 
-  Card.findByIdAndUpdate(cardId, { $pull: { likes: req.user._id } }, { returnDocument: 'after' })
-    .then((card) => res.status(200).send({ likes: card.likes }))
-    .catch((err) => res.status(500).send({ message: err.message }));
+  Card.findByIdAndUpdate(
+    cardId,
+    { $pull: { likes: req.user._id } },
+    { returnDocument: 'after' },
+  )
+    .then((card) => res.status(SUCCESS).send({ likes: card.likes }))
+    .catch((err) => handleLikeError(err, res));
 };
