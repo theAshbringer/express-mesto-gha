@@ -1,5 +1,6 @@
 const { Schema } = require('mongoose');
 const mongoose = require('mongoose');
+const { urlValidator } = require('../utils/common');
 
 const userSchema = new Schema({
   name: {
@@ -17,6 +18,7 @@ const userSchema = new Schema({
   avatar: {
     type: String,
     required: true,
+    validate: urlValidator,
   },
 });
 

@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const { urlValidator } = require('../utils/common');
 
 const cardSchema = new Schema({
   name: {
@@ -10,6 +11,7 @@ const cardSchema = new Schema({
   link: {
     type: String,
     required: true,
+    validate: urlValidator,
   },
   owner: {
     type: Schema.Types.ObjectId,
