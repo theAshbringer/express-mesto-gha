@@ -14,9 +14,11 @@ const CAST_ERROR = 'CastError';
 
 // Error messages
 // eslint-disable-next-line max-len
-const INVALID_CARD_DATA = 'Поля name и link не должны быть пустыми, поле name должно содержать от 2 до 30 символов';
-const CARD_NOT_FOUND = 'Запрашиваемая карточка не найдена';
-const INVALID_LIKE_DATA = 'Переданы некорректные данные для постановки/снятии лайка';
+const MSG_CARD_NOT_FOUND = 'Запрашиваемая карточка не найдена';
+const MSG_USER_NOT_FOUND = 'Запрашиваемый пользователь не найден';
+const MSG_INVALID_CARD_DATA = 'Переданы некорректные данные при создании карточки';
+const MSG_INVALID_LIKE_DATA = 'Переданы некорректные данные для постановки/снятии лайка';
+const MSG_INVALID_USER_DATA = 'Переданы некорректные данные при создании пользователя';
 
 module.exports = {
   INVALID_DATA,
@@ -26,8 +28,10 @@ module.exports = {
   SUCCESS,
   CARD_DELETED,
   VALIDATION_ERROR,
-  INVALID_CARD_DATA,
-  INVALID_LIKE_DATA,
-  CARD_NOT_FOUND,
+  MSG_INVALID_CARD_DATA,
+  MSG_INVALID_LIKE_DATA,
+  MSG_INVALID_USER_DATA,
+  MSG_CARD_NOT_FOUND,
+  MSG_USER_NOT_FOUND,
   CAST_ERROR,
 };

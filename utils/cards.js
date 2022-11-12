@@ -1,15 +1,15 @@
 const {
   CAST_ERROR,
-  CARD_NOT_FOUND,
-  INVALID_LIKE_DATA,
+  MSG_CARD_NOT_FOUND,
+  MSG_INVALID_LIKE_DATA,
   VALIDATION_ERROR,
-  INVALID_CARD_DATA,
+  MSG_INVALID_CARD_DATA,
 } = require('./constants');
 const { throwValidationError, throwDefaultError, throwNotFoundError } = require('./common');
 
 const handleCreateCardError = (err, res) => {
   if (err.name === VALIDATION_ERROR) {
-    throwValidationError(res, INVALID_CARD_DATA);
+    throwValidationError(res, MSG_INVALID_CARD_DATA);
   } else {
     throwDefaultError(res, err.message);
   }
@@ -17,11 +17,11 @@ const handleCreateCardError = (err, res) => {
 
 const handleLikeError = (err, res) => {
   if (err.name === CAST_ERROR) {
-    throwNotFoundError(res, CARD_NOT_FOUND);
+    throwNotFoundError(res, MSG_CARD_NOT_FOUND);
     return;
   }
   if (err.name === VALIDATION_ERROR) {
-    throwValidationError(res, INVALID_LIKE_DATA);
+    throwValidationError(res, MSG_INVALID_LIKE_DATA);
     return;
   }
   throwDefaultError(res, err.message);
@@ -29,7 +29,7 @@ const handleLikeError = (err, res) => {
 
 const handleDeleteCardError = (err, res) => {
   if (err.name === CAST_ERROR) {
-    throwNotFoundError(res, CARD_NOT_FOUND);
+    throwNotFoundError(res, MSG_CARD_NOT_FOUND);
   } else {
     throwDefaultError(res, err.message);
   }
