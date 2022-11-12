@@ -21,7 +21,7 @@ const handleLikeError = (err, res) => {
     return;
   }
   if (err.name === VALIDATION_ERROR) {
-    throwNotFoundError(res, INVALID_LIKE_DATA);
+    throwValidationError(res, INVALID_LIKE_DATA);
     return;
   }
   throwDefaultError(res, err.message);
