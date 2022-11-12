@@ -1,5 +1,5 @@
 const Card = require('../models/card');
-const { SUCCESS, CREATED } = require('../utils/constants');
+const { SUCCESS, CREATED, CARD_DELETED } = require('../utils/constants');
 const { throwMessage, throwDefaultError } = require('../utils/common');
 const { handleLikeError, handleDeleteCardError, handleCreateCardError } = require('../utils/cards');
 
@@ -21,7 +21,7 @@ module.exports.deleteCard = (req, res) => {
   const { cardId } = req.params;
 
   Card.deleteOne({ _id: cardId })
-    .then((ans) => res.status(SUCCESS).send(throwMessage(ans)))
+    .then(() => res.status(SUCCESS).send(throwMessage(CARD_DELETED)))
     .catch((err) => handleDeleteCardError(err, res));
 };
 
