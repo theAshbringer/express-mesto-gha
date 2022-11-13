@@ -1,7 +1,11 @@
 const Card = require('../models/card');
-const { SUCCESS, CREATED, CARD_DELETED } = require('../utils/constants');
-const { throwMessage, throwDefaultError } = require('../utils/common');
-const { handleLikeError, handleDeleteCardError, handleCreateCardError } = require('../utils/cards');
+const {
+  SUCCESS, CREATED, CARD_DELETED,
+} = require('../utils/constants');
+const {
+  throwMessage, throwDefaultError,
+} = require('../utils/common');
+const { handleCreateCardError } = require('../utils/cards');
 
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
@@ -22,7 +26,7 @@ module.exports.deleteCard = (req, res) => {
 
   Card.deleteOne({ _id: cardId })
     .then(() => res.status(SUCCESS).send(throwMessage(CARD_DELETED)))
-    .catch((err) => handleDeleteCardError(err, res));
+    .catch((err) => throwDefaultError(res, err));
 };
 
 module.exports.likeCard = (req, res) => {
@@ -34,7 +38,7 @@ module.exports.likeCard = (req, res) => {
     { returnDocument: 'after' },
   )
     .then((card) => res.status(SUCCESS).send({ likes: card.likes }))
-    .catch((err) => handleLikeError(err, res));
+    .catch((err) => throwDefaultError(res, err));
 };
 
 module.exports.dislikeCard = (req, res) => {
@@ -46,5 +50,5 @@ module.exports.dislikeCard = (req, res) => {
     { returnDocument: 'after' },
   )
     .then((card) => res.status(SUCCESS).send({ likes: card.likes }))
-    .catch((err) => handleLikeError(err, res));
+    .catch((err) => throwDefaultError(res, err));
 };

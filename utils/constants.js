@@ -17,7 +17,7 @@ const CAST_ERROR = 'CastError';
 const MSG_CARD_NOT_FOUND = 'Запрашиваемая карточка не найдена';
 const MSG_USER_NOT_FOUND = 'Запрашиваемый пользователь не найден';
 const MSG_INVALID_CARD_DATA = 'Переданы некорректные данные при создании карточки';
-const MSG_INVALID_LIKE_DATA = 'Переданы некорректные данные для постановки/снятии лайка';
+const MSG_INVALID_LIKE_DATA = 'Переданы некорректные данные для карточки';
 const MSG_INVALID_USER_DATA = 'Переданы некорректные данные при создании пользователя';
 
 module.exports = {
