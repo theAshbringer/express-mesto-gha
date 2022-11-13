@@ -1,11 +1,8 @@
 const User = require('../models/user');
-const {
-  SUCCESS, CREATED, CAST_ERROR,
-} = require('../utils/constants');
+const { SUCCESS, CREATED } = require('../utils/constants');
 const { throwDefaultError } = require('../utils/common');
 const {
   handleCreateUserError,
-  handleGetUserByIdError,
   handleUpdateProfileError,
 } = require('../utils/users');
 
@@ -27,14 +24,8 @@ module.exports.getUserById = (req, res) => {
   const { userId } = req.params;
 
   User.findById(userId)
-    .then((user) => {
-      if (user === null) {
-        // eslint-disable-next-line no-throw-literal
-        throw { name: CAST_ERROR };
-      }
-      res.status(SUCCESS).send(user);
-    })
-    .catch((err) => handleGetUserByIdError(err, res));
+    .then((user) => res.status(SUCCESS).send(user))
+    .catch((err) => throwDefaultError(res, err));
 };
 
 module.exports.updateProfile = (req, res) => {
