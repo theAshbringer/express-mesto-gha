@@ -14,6 +14,7 @@ const CAST_ERROR = 'CastError';
 
 // Error messages
 // eslint-disable-next-line max-len
+const MSG_ROUTE_NOT_FOUND = 'Запрашиваемый путь не найден';
 const MSG_CARD_NOT_FOUND = 'Запрашиваемая карточка не найдена';
 const MSG_USER_NOT_FOUND = 'Запрашиваемый пользователь не найден';
 const MSG_INVALID_CARD_DATA = 'Переданы некорректные данные при создании карточки';
@@ -33,5 +34,6 @@ module.exports = {
   MSG_INVALID_USER_DATA,
   MSG_CARD_NOT_FOUND,
   MSG_USER_NOT_FOUND,
+  MSG_ROUTE_NOT_FOUND,
   CAST_ERROR,
 };
