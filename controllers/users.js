@@ -1,10 +1,7 @@
 const User = require('../models/user');
 const { SUCCESS, CREATED } = require('../utils/constants');
 const { throwDefaultError } = require('../utils/common');
-const {
-  handleCreateUserError,
-  handleUpdateProfileError,
-} = require('../utils/users');
+const { handleCreateUserError, handleUpdateProfileError } = require('../utils/users');
 
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;

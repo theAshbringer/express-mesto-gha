@@ -1,10 +1,6 @@
 const Card = require('../models/card');
-const {
-  SUCCESS, CREATED, CARD_DELETED,
-} = require('../utils/constants');
-const {
-  throwMessage, throwDefaultError,
-} = require('../utils/common');
+const { SUCCESS, CREATED, CARD_DELETED } = require('../utils/constants');
+const { throwMessage, throwDefaultError } = require('../utils/common');
 const { handleCreateCardError } = require('../utils/cards');
 
 module.exports.createCard = (req, res) => {
