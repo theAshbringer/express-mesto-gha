@@ -2,8 +2,8 @@ const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const { throwNotFoundError } = require('./utils/common');
-const { MSG_ROUTE_NOT_FOUND } = require('./utils/constants');
+const { throwMessage } = require('./utils/common');
+const { MSG_ROUTE_NOT_FOUND, NOT_FOUND } = require('./utils/constants');
 
 const { PORT = 3000 } = process.env;
 
@@ -24,7 +24,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb');
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
-app.use((req, res) => throwNotFoundError(res, MSG_ROUTE_NOT_FOUND));
+app.use((req, res) => res.status(NOT_FOUND).send(throwMessage(MSG_ROUTE_NOT_FOUND)));
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.listen(PORT);
