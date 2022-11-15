@@ -5,7 +5,7 @@
 https://github.com/theAshbringer/express-mesto-gha
 
 ## API
-There are USER and CARD entities. All available action are listed below.
+There are USER and CARD entities. All available actions are listed below.
 
 ### Users:
 
