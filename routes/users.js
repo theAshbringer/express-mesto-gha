@@ -1,9 +1,11 @@
 const router = require('express').Router();
 const {
-  getUserById, getUsers, updateProfile, updateAvatar,
+  getUserById, getUsers, updateProfile, updateAvatar, getProfile,
 } = require('../controllers/users');
 
 router.get('/', getUsers);
+
+router.get('/me', getProfile);
 
 router.get('/:userId', getUserById);
 

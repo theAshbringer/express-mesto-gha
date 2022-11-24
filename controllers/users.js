@@ -102,3 +102,10 @@ module.exports.updateAvatar = (req, res) => {
       return res.status(DEFAULT_ERROR).send(throwMessage(err.message));
     });
 };
+
+module.exports.getProfile = (req, res) => {
+  const { _id } = req.user;
+  User.findById(_id).orFail({ name: NOT_FOUND_ERROR })
+    .then((user) => res.status(SUCCESS).send(user))
+    .catch(((err) => res.status(DEFAULT_ERROR).send(err.message)));
+};
