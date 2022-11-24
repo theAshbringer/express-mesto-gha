@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { throwMessage } = require('./utils/common');
 const { MSG_ROUTE_NOT_FOUND, NOT_FOUND } = require('./utils/constants');
+const { login, createUser } = require('./controllers/users');
 
 const { PORT = 3000 } = process.env;
 
@@ -20,6 +21,9 @@ app.use((req, res, next) => {
 });
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
+
+app.use('/signin', login);
+app.use('/signup', createUser);
 
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));

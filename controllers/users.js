@@ -1,3 +1,5 @@
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const {
   SUCCESS,
@@ -7,14 +9,35 @@ const {
   MSG_INVALID_USER_DATA,
   DEFAULT_ERROR,
   NOT_FOUND_ERROR,
-  MSG_USER_NOT_FOUND, CAST_ERROR, NOT_FOUND,
+  MSG_USER_NOT_FOUND, CAST_ERROR, NOT_FOUND, UNAUTHORIZED, MSG_USER_UNAUTHORIZED, AUTH_ERROR,
 } = require('../utils/constants');
 const { throwMessage } = require('../utils/common');
 
-module.exports.createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
+module.exports.login = (req, res) => {
+  const { email, password } = req.body;
 
-  User.create({ name, about, avatar })
+  User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, 'secret-key', { expiresIn: '7d' });
+      res.cookie('jwt', token, { maxAge: 3600000 * 24 * 7, httpOnly: true }).end();
+    })
+    .catch((err) => {
+      if (err.name === AUTH_ERROR) {
+        return res.status(UNAUTHORIZED).send(throwMessage(MSG_USER_UNAUTHORIZED));
+      }
+      return res.status(DEFAULT_ERROR).send(throwMessage(err.message));
+    });
+};
+
+module.exports.createUser = (req, res) => {
+  const {
+    name, about, avatar, email, password,
+  } = req.body;
+
+  bcrypt.hash(password, 10)
+    .then((hash) => User.create({
+      name, about, avatar, email, password: hash,
+    }))
     .then((newUser) => res.status(CREATED).send(newUser))
     .catch((err) => {
       if (err.name === VALIDATION_ERROR) {
