@@ -31,13 +31,14 @@ const userSchema = new Schema({
   password: {
     type: String,
     required: true,
+    select: false,
     minlength: 8,
   },
 });
 
 // eslint-disable-next-line func-names
 userSchema.statics.findUserByCredentials = function (email, password) {
-  return this.findOne({ email }).orFail({ name: AUTH_ERROR })
+  return this.findOne({ email }).select('+password').orFail({ name: AUTH_ERROR })
     .then((user) => bcrypt.compare(password, user.password).then((matched) => {
       if (!matched) {
         return Promise.reject(new Error(MSG_USER_UNAUTHORIZED));
