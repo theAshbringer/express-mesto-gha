@@ -15,7 +15,13 @@ const urlValidator = validate({
   message: 'Передан невалидный URL',
 });
 
+const emailValidator = validate({
+  validator: (value) => validator.isEmail(value),
+  message: 'Передан невалидный URL',
+});
+
 module.exports = {
   throwMessage,
   urlValidator,
+  emailValidator,
 };
