@@ -10,6 +10,7 @@ const {
   NOT_FOUND_ERROR,
   CAST_ERROR, NOT_FOUND,
   MSG_CARD_NOT_FOUND,
+  MSG_MISSING_AUTH_HEADER,
 } = require('../utils/constants');
 const { throwMessage } = require('../utils/common');
 
@@ -34,8 +35,17 @@ module.exports.getCards = (req, res) => {
 
 module.exports.deleteCard = (req, res) => {
   const { cardId } = req.params;
+  const { _id } = req.user;
 
-  Card.deleteOne({ _id: cardId }).orFail({ name: NOT_FOUND_ERROR })
+  Card.findById(cardId).orFail({ name: NOT_FOUND_ERROR })
+    // eslint-disable-next-line consistent-return
+    .then((card) => {
+      // eslint-disable-next-line eqeqeq
+      if (card.owner != _id) {
+        return Promise.reject(new Error(MSG_MISSING_AUTH_HEADER));
+      }
+    })
+    .then(() => Card.deleteOne({ _id: cardId }).orFail({ name: NOT_FOUND_ERROR }))
     .then(() => res.status(SUCCESS).send(throwMessage(CARD_DELETED)))
     .catch((err) => {
       if (err.name === CAST_ERROR) {
