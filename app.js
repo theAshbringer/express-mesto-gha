@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const { throwMessage } = require('./utils/common');
 const {
-  MSG_ROUTE_NOT_FOUND, NOT_FOUND, DEFAULT_ERROR, MSG_DEFAULT,
+  MSG_ROUTE_NOT_FOUND, NOT_FOUND, DEFAULT_ERROR, MSG_DEFAULT, MSG_REGISTERED_USER, CONFLICT,
 } = require('./utils/constants');
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
@@ -34,7 +34,11 @@ app.use(errors());
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
+  let { statusCode = DEFAULT_ERROR, message } = err;
+  if (err.code === 11000) {
+    statusCode = CONFLICT;
+    message = MSG_REGISTERED_USER;
+  }
   res.status(statusCode).send({
     message: statusCode === DEFAULT_ERROR ? MSG_DEFAULT : message,
   });
