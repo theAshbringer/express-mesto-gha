@@ -4,10 +4,8 @@ const User = require('../models/user');
 const {
   SUCCESS,
   CREATED,
-  DEFAULT_ERROR,
   MSG_USER_NOT_FOUND,
 } = require('../utils/constants');
-const { throwMessage } = require('../utils/common');
 const NotFoundError = require('../errors/not-found-err');
 
 module.exports.login = (req, res, next) => {
@@ -34,10 +32,10 @@ module.exports.createUser = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.getUsers = (req, res) => {
+module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.status(SUCCESS).send(users))
-    .catch((err) => res.status(DEFAULT_ERROR).send(throwMessage(err.message)));
+    .catch(next);
 };
 
 module.exports.getUserById = (req, res, next) => {
@@ -76,5 +74,5 @@ module.exports.getProfile = (req, res, next) => {
   const { _id } = req.user;
   User.findById(_id).orFail(new NotFoundError(MSG_USER_NOT_FOUND))
     .then((user) => res.status(SUCCESS).send(user))
-    .catch((err) => next(err));
+    .catch(next);
 };
