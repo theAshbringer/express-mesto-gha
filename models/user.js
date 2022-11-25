@@ -1,8 +1,10 @@
 const bcrypt = require('bcryptjs');
 const { Schema } = require('mongoose');
 const mongoose = require('mongoose');
+const NotFoundError = require('../errors/not-found-err');
+const UnauthorizedError = require('../errors/unauth-err');
 const { urlValidator, emailValidator } = require('../utils/common');
-const { AUTH_ERROR, MSG_USER_UNAUTHORIZED } = require('../utils/constants');
+const { MSG_USER_UNAUTHORIZED, MSG_USER_NOT_FOUND } = require('../utils/constants');
 
 const userSchema = new Schema({
   name: {
@@ -38,10 +40,10 @@ const userSchema = new Schema({
 
 // eslint-disable-next-line func-names
 userSchema.statics.findUserByCredentials = function (email, password) {
-  return this.findOne({ email }).select('+password').orFail({ name: AUTH_ERROR })
+  return this.findOne({ email }).select('+password').orFail(new NotFoundError(MSG_USER_NOT_FOUND))
     .then((user) => bcrypt.compare(password, user.password).then((matched) => {
       if (!matched) {
-        return Promise.reject(new Error(MSG_USER_UNAUTHORIZED));
+        return Promise.reject(new UnauthorizedError(MSG_USER_UNAUTHORIZED));
       }
 
       return user;

@@ -4,16 +4,13 @@ const User = require('../models/user');
 const {
   SUCCESS,
   CREATED,
-  VALIDATION_ERROR,
-  INVALID_DATA,
-  MSG_INVALID_USER_DATA,
   DEFAULT_ERROR,
-  NOT_FOUND_ERROR,
-  MSG_USER_NOT_FOUND, CAST_ERROR, NOT_FOUND, UNAUTHORIZED, MSG_USER_UNAUTHORIZED, AUTH_ERROR,
+  MSG_USER_NOT_FOUND,
 } = require('../utils/constants');
 const { throwMessage } = require('../utils/common');
+const NotFoundError = require('../errors/not-found-err');
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   User.findUserByCredentials(email, password)
@@ -21,15 +18,10 @@ module.exports.login = (req, res) => {
       const token = jwt.sign({ _id: user._id }, 'secret-key', { expiresIn: '7d' });
       res.cookie('jwt', token, { maxAge: 3600000 * 24 * 7, httpOnly: true }).end();
     })
-    .catch((err) => {
-      if (err.name === AUTH_ERROR) {
-        return res.status(UNAUTHORIZED).send(throwMessage(MSG_USER_UNAUTHORIZED));
-      }
-      return res.status(DEFAULT_ERROR).send(throwMessage(err.message));
-    });
+    .catch(next);
 };
 
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
@@ -39,12 +31,7 @@ module.exports.createUser = (req, res) => {
       name, about, avatar, email, password: hash,
     }))
     .then((newUser) => res.status(CREATED).send(newUser))
-    .catch((err) => {
-      if (err.name === VALIDATION_ERROR) {
-        return res.status(INVALID_DATA).send(throwMessage(MSG_INVALID_USER_DATA));
-      }
-      return res.status(DEFAULT_ERROR).send(throwMessage(err.message));
-    });
+    .catch(next);
 };
 
 module.exports.getUsers = (req, res) => {
@@ -53,59 +40,41 @@ module.exports.getUsers = (req, res) => {
     .catch((err) => res.status(DEFAULT_ERROR).send(throwMessage(err.message)));
 };
 
-module.exports.getUserById = (req, res) => {
+module.exports.getUserById = (req, res, next) => {
   const { userId } = req.params;
 
-  User.findById(userId).orFail({ name: NOT_FOUND_ERROR })
+  User.findById(userId).orFail(new NotFoundError(MSG_USER_NOT_FOUND))
     .then((user) => res.status(SUCCESS).send(user))
-    .catch((err) => {
-      if (err.name === CAST_ERROR) {
-        return res.status(INVALID_DATA).send(throwMessage(MSG_INVALID_USER_DATA));
-      }
-      if (err.name === NOT_FOUND_ERROR) {
-        return res.status(NOT_FOUND).send(throwMessage(MSG_USER_NOT_FOUND));
-      }
-      return res.status(DEFAULT_ERROR).send(throwMessage(err.message));
-    });
+    .catch(next);
 };
 
-module.exports.updateProfile = (req, res) => {
+module.exports.updateProfile = (req, res, next) => {
   const { name, about } = req.body;
 
   User.findByIdAndUpdate(
     req.user._id,
     { name, about },
     { returnDocument: 'after', runValidators: true },
-  )
+  ).orFail(new NotFoundError(MSG_USER_NOT_FOUND))
     .then((user) => res.status(SUCCESS).send(user))
-    .catch((err) => {
-      if (err.name === VALIDATION_ERROR) {
-        return res.status(INVALID_DATA).send(throwMessage(MSG_INVALID_USER_DATA));
-      }
-      return res.status(DEFAULT_ERROR).send(throwMessage(err.message));
-    });
+    .catch(next);
 };
 
-module.exports.updateAvatar = (req, res) => {
+module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
 
   User.findByIdAndUpdate(
     req.user._id,
     { avatar },
-    { returnDocument: 'after', runValidators: true },
-  )
+    { returnDocument: 'after' },
+  ).orFail(new NotFoundError(MSG_USER_NOT_FOUND))
     .then((user) => res.status(SUCCESS).send(user))
-    .catch((err) => {
-      if (err.name === VALIDATION_ERROR) {
-        return res.status(INVALID_DATA).send(throwMessage(MSG_INVALID_USER_DATA));
-      }
-      return res.status(DEFAULT_ERROR).send(throwMessage(err.message));
-    });
+    .catch(next);
 };
 
-module.exports.getProfile = (req, res) => {
+module.exports.getProfile = (req, res, next) => {
   const { _id } = req.user;
-  User.findById(_id).orFail({ name: NOT_FOUND_ERROR })
+  User.findById(_id).orFail(new NotFoundError(MSG_USER_NOT_FOUND))
     .then((user) => res.status(SUCCESS).send(user))
-    .catch(((err) => res.status(DEFAULT_ERROR).send(err.message)));
+    .catch((err) => next(err));
 };

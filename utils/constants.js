@@ -24,6 +24,7 @@ const MSG_MISSING_AUTH_HEADER = 'Передан некорректный ток�
 const MSG_INVALID_CARD_DATA = 'Переданы некорректные данные при создании карточки';
 const MSG_INVALID_LIKE_DATA = 'Переданы некорректные данные для карточки';
 const MSG_INVALID_USER_DATA = 'Переданы некорректные данные пользователя';
+const MSG_DEFAULT = 'На сервере произошла ошибка';
 
 module.exports = {
   INVALID_DATA,
@@ -45,4 +46,5 @@ module.exports = {
   CAST_ERROR,
   MSG_MISSING_AUTH_HEADER,
   NOT_FOUND_ERROR,
+  MSG_DEFAULT,
 };
