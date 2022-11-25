@@ -1,10 +1,9 @@
 const bcrypt = require('bcryptjs');
 const { Schema } = require('mongoose');
 const mongoose = require('mongoose');
-const NotFoundError = require('../errors/not-found-err');
 const UnauthorizedError = require('../errors/unauth-err');
 const { urlValidator, emailValidator } = require('../utils/common');
-const { MSG_USER_UNAUTHORIZED, MSG_USER_NOT_FOUND } = require('../utils/constants');
+const { MSG_USER_UNAUTHORIZED } = require('../utils/constants');
 
 const userSchema = new Schema({
   name: {
