@@ -26,6 +26,10 @@ const MSG_INVALID_LIKE_DATA = 'Переданы некорректные дан�
 const MSG_INVALID_USER_DATA = 'Переданы некорректные данные пользователя';
 const MSG_DEFAULT = 'На сервере произошла ошибка';
 
+// Patterns for validation
+const OBJECT_ID_PATTERN = /^[0-9a-fA-F]{24}$/;
+const LINK_PATTERN = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)/;
+
 module.exports = {
   INVALID_DATA,
   NOT_FOUND,
@@ -47,4 +51,6 @@ module.exports = {
   MSG_MISSING_AUTH_HEADER,
   NOT_FOUND_ERROR,
   MSG_DEFAULT,
+  OBJECT_ID_PATTERN,
+  LINK_PATTERN,
 };
