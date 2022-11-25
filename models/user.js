@@ -40,7 +40,7 @@ const userSchema = new Schema({
 
 // eslint-disable-next-line func-names
 userSchema.statics.findUserByCredentials = function (email, password) {
-  return this.findOne({ email }).select('+password').orFail(new NotFoundError(MSG_USER_NOT_FOUND))
+  return this.findOne({ email }).select('+password').orFail(new UnauthorizedError(MSG_USER_UNAUTHORIZED))
     .then((user) => bcrypt.compare(password, user.password).then((matched) => {
       if (!matched) {
         return Promise.reject(new UnauthorizedError(MSG_USER_UNAUTHORIZED));
