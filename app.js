@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
+const cookieParser = require('cookie-parser');
 const { throwMessage } = require('./utils/common');
 const {
   MSG_ROUTE_NOT_FOUND, NOT_FOUND, DEFAULT_ERROR, MSG_DEFAULT, MSG_REGISTERED_USER, CONFLICT,
@@ -20,6 +21,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
+
+app.use(cookieParser());
 
 app.use('/signin', signinValidator, login);
 

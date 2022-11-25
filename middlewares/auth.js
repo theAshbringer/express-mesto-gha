@@ -8,11 +8,11 @@ const extractBearerToken = (header) => header.replace('Bearer ', '');
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
 
-  if (!authorization || !authorization.startsWith('Bearer ')) {
+  if (!req.cookies.jwt || !authorization || !authorization.startsWith('Bearer ')) {
     return res.status(UNAUTHORIZED).send(throwMessage(MSG_MISSING_AUTH_HEADER));
   }
 
-  const token = extractBearerToken(authorization);
+  const token = req.cookies.jwt ? req.cookies.jwt : extractBearerToken(authorization);
 
   let payload;
   try {
