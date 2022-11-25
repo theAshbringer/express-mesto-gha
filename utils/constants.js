@@ -27,6 +27,7 @@ const MSG_INVALID_LIKE_DATA = 'Переданы некорректные дан�
 const MSG_INVALID_USER_DATA = 'Переданы некорректные данные пользователя';
 const MSG_REGISTERED_USER = 'Пользователь уже зарегистрирован';
 const MSG_DEFAULT = 'На сервере произошла ошибка';
+const MSG_AUTH_SUCCESS = 'Успешная авторизация';
 
 // Patterns for validation
 const OBJECT_ID_PATTERN = /^[0-9a-fA-F]{24}$/;
@@ -57,4 +58,5 @@ module.exports = {
   OBJECT_ID_PATTERN,
   LINK_PATTERN,
   MSG_REGISTERED_USER,
+  MSG_AUTH_SUCCESS,
 };

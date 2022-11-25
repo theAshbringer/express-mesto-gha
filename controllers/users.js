@@ -5,8 +5,10 @@ const {
   SUCCESS,
   CREATED,
   MSG_USER_NOT_FOUND,
+  MSG_AUTH_SUCCESS,
 } = require('../utils/constants');
 const NotFoundError = require('../errors/not-found-err');
+const { throwMessage } = require('../utils/common');
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
@@ -14,7 +16,7 @@ module.exports.login = (req, res, next) => {
   User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, 'secret-key', { expiresIn: '7d' });
-      res.cookie('jwt', token, { maxAge: 3600000 * 24 * 7, httpOnly: true }).end();
+      res.cookie('jwt', token, { maxAge: 3600000 * 24 * 7, httpOnly: true }).status(SUCCESS).send(throwMessage(MSG_AUTH_SUCCESS));
     })
     .catch(next);
 };
