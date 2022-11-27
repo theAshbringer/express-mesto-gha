@@ -1,5 +1,5 @@
 const { Schema, model } = require('mongoose');
-const { urlValidator } = require('../utils/common');
+const { urlValidator } = require('../validators/schema-validators');
 
 const cardSchema = new Schema({
   name: {
