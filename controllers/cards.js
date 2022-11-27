@@ -3,12 +3,12 @@ const {
   SUCCESS,
   CREATED,
   CARD_DELETED,
-  MSG_MISSING_AUTH_HEADER,
   MSG_CARD_NOT_FOUND,
+  MSG_FORBIDDEN,
 } = require('../utils/constants');
 const { throwMessage } = require('../utils/common');
 const NotFoundError = require('../errors/not-found-err');
-const UnauthorizedError = require('../errors/unauth-err');
+const ForbiddenError = require('../errors/forbidden-err');
 
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
@@ -33,7 +33,7 @@ module.exports.deleteCard = (req, res, next) => {
     .then((card) => {
       // eslint-disable-next-line eqeqeq
       if (card.owner != _id) {
-        return Promise.reject(new UnauthorizedError(MSG_MISSING_AUTH_HEADER));
+        return Promise.reject(new ForbiddenError(MSG_FORBIDDEN));
       }
     })
     .then(() => Card.deleteOne({ _id: cardId }).orFail(new NotFoundError(MSG_CARD_NOT_FOUND)))

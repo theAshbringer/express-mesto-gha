@@ -3,6 +3,7 @@ const CREATED = 201;
 const SUCCESS = 200;
 const INVALID_DATA = 400;
 const UNAUTHORIZED = 401;
+const FORBIDDEN = 403;
 const NOT_FOUND = 404;
 const CONFLICT = 409;
 const DEFAULT_ERROR = 500;
@@ -26,6 +27,7 @@ const MSG_INVALID_CARD_DATA = 'Переданы некорректные дан�
 const MSG_INVALID_LIKE_DATA = 'Переданы некорректные данные для карточки';
 const MSG_INVALID_USER_DATA = 'Переданы некорректные данные пользователя';
 const MSG_REGISTERED_USER = 'Пользователь уже зарегистрирован';
+const MSG_FORBIDDEN = 'Нельзя удалить карточку другого пользователя';
 const MSG_DEFAULT = 'На сервере произошла ошибка';
 const MSG_AUTH_SUCCESS = 'Успешная авторизация';
 
@@ -59,4 +61,6 @@ module.exports = {
   LINK_PATTERN,
   MSG_REGISTERED_USER,
   MSG_AUTH_SUCCESS,
+  MSG_FORBIDDEN,
+  FORBIDDEN,
 };
