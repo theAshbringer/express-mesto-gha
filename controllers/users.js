@@ -11,11 +11,16 @@ const NotFoundError = require('../errors/not-found-err');
 const { throwMessage } = require('../utils/common');
 
 module.exports.login = (req, res, next) => {
+  const { NODE_ENV, JWT_SECRET } = process.env;
   const { email, password } = req.body;
 
   User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'secret-key', { expiresIn: '7d' });
+      const token = jwt.sign(
+        { _id: user._id },
+        NODE_ENV === 'production' ? JWT_SECRET : 'secret-key',
+        { expiresIn: '7d' },
+      );
       res.cookie('jwt', token, { maxAge: 3600000 * 24 * 7, httpOnly: true }).status(SUCCESS).send(throwMessage(MSG_AUTH_SUCCESS));
     })
     .catch(next);

@@ -13,6 +13,8 @@ const auth = require('./middlewares/auth');
 const signupValidator = require('./validators/signup-validator');
 const signinValidator = require('./validators/signin-validator');
 
+require('dotenv').config();
+
 const { PORT = 3000 } = process.env;
 
 const app = express();

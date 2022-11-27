@@ -15,7 +15,8 @@ module.exports = (req, res, next) => {
 
   let payload;
   try {
-    payload = jwt.verify(token, 'secret-key');
+    const { NODE_ENV, JWT_SECRET } = process.env;
+    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'secret-key');
   } catch (error) {
     return res.status(UNAUTHORIZED).send(throwMessage(MSG_MISSING_AUTH_HEADER));
   }
