@@ -4,14 +4,14 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
-const { throwMessage } = require('./utils/common');
 const {
-  MSG_ROUTE_NOT_FOUND, NOT_FOUND, DEFAULT_ERROR, MSG_DEFAULT, MSG_REGISTERED_USER, CONFLICT,
+  MSG_ROUTE_NOT_FOUND, DEFAULT_ERROR, MSG_DEFAULT,
 } = require('./utils/constants');
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const signupValidator = require('./validators/signup-validator');
 const signinValidator = require('./validators/signin-validator');
+const NotFoundError = require('./errors/not-found-err');
 
 require('dotenv').config();
 
@@ -37,6 +37,8 @@ app.use('/users', require('./routes/users'));
 
 app.use(errors());
 
+app.use((req, res, next) => next(new NotFoundError(MSG_ROUTE_NOT_FOUND)));
+
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || DEFAULT_ERROR;
 
@@ -44,8 +46,6 @@ app.use((err, req, res, next) => {
   res.status(statusCode).send({ message });
   next();
 });
-
-app.use((req, res) => res.status(NOT_FOUND).send(throwMessage(MSG_ROUTE_NOT_FOUND)));
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.listen(PORT);
