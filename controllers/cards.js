@@ -39,8 +39,7 @@ module.exports.deleteCard = (req, res, next) => {
   Card.findById(cardId).orFail(new NotFoundError(MSG_CARD_NOT_FOUND))
     // eslint-disable-next-line consistent-return
     .then((card) => {
-      // eslint-disable-next-line eqeqeq
-      if (card.owner != _id) {
+      if (String(card.owner) !== _id) {
         return Promise.reject(new ForbiddenError(MSG_FORBIDDEN));
       }
     })
