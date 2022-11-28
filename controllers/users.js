@@ -6,9 +6,11 @@ const {
   CREATED,
   MSG_USER_NOT_FOUND,
   MSG_AUTH_SUCCESS,
+  MSG_REGISTERED_USER,
 } = require('../utils/constants');
 const NotFoundError = require('../errors/not-found-err');
 const { throwMessage } = require('../utils/common');
+const ConflictError = require('../errors/conflict-err');
 
 module.exports.login = (req, res, next) => {
   const { NODE_ENV, JWT_SECRET } = process.env;
@@ -38,7 +40,12 @@ module.exports.createUser = (req, res, next) => {
     }) => res.status(CREATED).send({
       name, about, avatar, email,
     }))
-    .catch(next);
+    .catch((err) => {
+      if (err.code === 11000) {
+        return next(new ConflictError(MSG_REGISTERED_USER));
+      }
+      return next(err);
+    });
 };
 
 module.exports.getUsers = (req, res, next) => {

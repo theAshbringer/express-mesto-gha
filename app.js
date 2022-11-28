@@ -37,16 +37,12 @@ app.use('/users', require('./routes/users'));
 
 app.use(errors());
 
-// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
-  let { statusCode = DEFAULT_ERROR, message } = err;
-  if (err.code === 11000) {
-    statusCode = CONFLICT;
-    message = MSG_REGISTERED_USER;
-  }
-  res.status(statusCode).send({
-    message: statusCode === DEFAULT_ERROR ? MSG_DEFAULT : message,
-  });
+  const statusCode = err.statusCode || DEFAULT_ERROR;
+
+  const message = statusCode === DEFAULT_ERROR ? MSG_DEFAULT : err.message;
+  res.status(statusCode).send({ message });
+  next();
 });
 
 app.use((req, res) => res.status(NOT_FOUND).send(throwMessage(MSG_ROUTE_NOT_FOUND)));
