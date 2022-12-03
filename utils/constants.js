@@ -7,6 +7,7 @@ const FORBIDDEN = 403;
 const NOT_FOUND = 404;
 const CONFLICT = 409;
 const DEFAULT_ERROR = 500;
+const USER_NOT_UNIQUE_ERROR = 11000;
 
 // Messages
 const CARD_DELETED = 'Пост удалён';
@@ -39,6 +40,7 @@ module.exports = {
   INVALID_DATA,
   NOT_FOUND,
   DEFAULT_ERROR,
+  USER_NOT_UNIQUE_ERROR,
   AUTH_ERROR,
   CREATED,
   CONFLICT,

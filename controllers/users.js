@@ -6,9 +6,15 @@ const {
   CREATED,
   MSG_USER_NOT_FOUND,
   MSG_AUTH_SUCCESS,
+  MSG_REGISTERED_USER,
+  VALIDATION_ERROR,
+  MSG_INVALID_USER_DATA,
+  USER_NOT_UNIQUE_ERROR,
 } = require('../utils/constants');
 const NotFoundError = require('../errors/not-found-err');
 const { throwMessage } = require('../utils/common');
+const ConflictError = require('../errors/conflict-err');
+const ValidationError = require('../errors/validation-err');
 
 module.exports.login = (req, res, next) => {
   const { NODE_ENV, JWT_SECRET } = process.env;
@@ -38,7 +44,15 @@ module.exports.createUser = (req, res, next) => {
     }) => res.status(CREATED).send({
       name, about, avatar, email,
     }))
-    .catch(next);
+    .catch((err) => {
+      if (err.code === USER_NOT_UNIQUE_ERROR) {
+        return next(new ConflictError(MSG_REGISTERED_USER));
+      }
+      if (err.name === VALIDATION_ERROR) {
+        return next(new ValidationError(MSG_INVALID_USER_DATA));
+      }
+      return next(err);
+    });
 };
 
 module.exports.getUsers = (req, res, next) => {
@@ -64,7 +78,12 @@ module.exports.updateProfile = (req, res, next) => {
     { returnDocument: 'after', runValidators: true },
   ).orFail(new NotFoundError(MSG_USER_NOT_FOUND))
     .then((user) => res.status(SUCCESS).send(user))
-    .catch(next);
+    .catch((err) => {
+      if (err.name === VALIDATION_ERROR) {
+        return next(new ValidationError(MSG_INVALID_USER_DATA));
+      }
+      return next(err);
+    });
 };
 
 module.exports.updateAvatar = (req, res, next) => {
@@ -76,7 +95,12 @@ module.exports.updateAvatar = (req, res, next) => {
     { returnDocument: 'after' },
   ).orFail(new NotFoundError(MSG_USER_NOT_FOUND))
     .then((user) => res.status(SUCCESS).send(user))
-    .catch(next);
+    .catch((err) => {
+      if (err.name === VALIDATION_ERROR) {
+        return next(new ValidationError(MSG_INVALID_USER_DATA));
+      }
+      return next(err);
+    });
 };
 
 module.exports.getProfile = (req, res, next) => {
