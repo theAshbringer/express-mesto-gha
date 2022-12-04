@@ -28,6 +28,8 @@ module.exports.createCard = (req, res, next) => {
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
+    .populate(['likes', 'owner'])
+    .sort({ _id: -1 })
     .then((cards) => res.status(SUCCESS).send(cards))
     .catch(next);
 };
