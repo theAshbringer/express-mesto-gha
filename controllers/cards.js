@@ -56,7 +56,8 @@ module.exports.likeCard = (req, res, next) => {
     { $addToSet: { likes: req.user._id } },
     { returnDocument: 'after' },
   ).orFail(new NotFoundError(MSG_CARD_NOT_FOUND))
-    .then((card) => res.status(SUCCESS).send({ likes: card.likes }))
+    .populate(['likes', 'owner'])
+    .then((card) => res.status(SUCCESS).send(card))
     .catch(next);
 };
 
@@ -68,6 +69,7 @@ module.exports.dislikeCard = (req, res, next) => {
     { $pull: { likes: req.user._id } },
     { returnDocument: 'after' },
   ).orFail(new NotFoundError(MSG_CARD_NOT_FOUND))
-    .then((card) => res.status(SUCCESS).send({ likes: card.likes }))
+    .populate(['likes', 'owner'])
+    .then((card) => res.status(SUCCESS).send(card))
     .catch(next);
 };
