@@ -33,6 +33,13 @@ module.exports.login = (req, res, next) => {
     .catch(next);
 };
 
+module.exports.logout = (req, res) => {
+  res
+    .clearCookie('jwt', { httpOnly: true })
+    .status(204)
+    .end();
+};
+
 module.exports.createUser = (req, res, next) => {
   const { password } = req.body;
 
