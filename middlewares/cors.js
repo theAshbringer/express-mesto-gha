@@ -3,6 +3,7 @@ const allowedCors = [
   'http://localhost:3005',
   'https://theAshbringer.github.io',
   'https://mesto.theashbringer.nomoredomains.club',
+  'http://mesto.theashbringer.nomoredomains.club',
 ];
 
 module.exports.corsOptions = {
