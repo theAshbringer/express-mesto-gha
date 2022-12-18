@@ -17,7 +17,10 @@ module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
 
   Card.create({ name, link, owner: req.user })
-    .then((newCard) => res.status(CREATED).send(newCard))
+    .then(({ _id }) => Card.findById(_id)
+      .orFail(new NotFoundError(MSG_CARD_NOT_FOUND))
+      .populate(['owner'])
+      .then((newCard) => res.status(CREATED).send(newCard)))
     .catch((err) => {
       if (err.name === VALIDATION_ERROR) {
         return next(new ValidationError(MSG_INVALID_CARD_DATA));
