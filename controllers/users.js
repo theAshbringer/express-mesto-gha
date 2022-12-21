@@ -5,14 +5,12 @@ const {
   SUCCESS,
   CREATED,
   MSG_USER_NOT_FOUND,
-  MSG_AUTH_SUCCESS,
   MSG_REGISTERED_USER,
   VALIDATION_ERROR,
   MSG_INVALID_USER_DATA,
   USER_NOT_UNIQUE_ERROR,
 } = require('../utils/constants');
 const NotFoundError = require('../errors/not-found-err');
-const { throwMessage } = require('../utils/common');
 const ConflictError = require('../errors/conflict-err');
 const ValidationError = require('../errors/validation-err');
 
@@ -27,9 +25,21 @@ module.exports.login = (req, res, next) => {
         NODE_ENV === 'production' ? JWT_SECRET : 'secret-key',
         { expiresIn: '7d' },
       );
-      res.cookie('jwt', token, { maxAge: 3600000 * 24 * 7, httpOnly: true }).status(SUCCESS).send(throwMessage(MSG_AUTH_SUCCESS));
+      res
+        .cookie('jwt', token, {
+          maxAge: 3600000 * 24 * 7, httpOnly: true, secure: NODE_ENV === 'production', sameSite: false,
+        })
+        .status(SUCCESS)
+        .send({ data: { _id: user._id, email: user.email } });
     })
     .catch(next);
+};
+
+module.exports.logout = (req, res) => {
+  res
+    .clearCookie('jwt', { httpOnly: true })
+    .status(204)
+    .end();
 };
 
 module.exports.createUser = (req, res, next) => {

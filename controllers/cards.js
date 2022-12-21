@@ -17,7 +17,10 @@ module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
 
   Card.create({ name, link, owner: req.user })
-    .then((newCard) => res.status(CREATED).send(newCard))
+    .then(({ _id }) => Card.findById(_id)
+      .orFail(new NotFoundError(MSG_CARD_NOT_FOUND))
+      .populate(['owner'])
+      .then((newCard) => res.status(CREATED).send(newCard)))
     .catch((err) => {
       if (err.name === VALIDATION_ERROR) {
         return next(new ValidationError(MSG_INVALID_CARD_DATA));
@@ -28,6 +31,8 @@ module.exports.createCard = (req, res, next) => {
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
+    .populate(['likes', 'owner'])
+    .sort({ _id: -1 })
     .then((cards) => res.status(SUCCESS).send(cards))
     .catch(next);
 };
@@ -56,7 +61,8 @@ module.exports.likeCard = (req, res, next) => {
     { $addToSet: { likes: req.user._id } },
     { returnDocument: 'after' },
   ).orFail(new NotFoundError(MSG_CARD_NOT_FOUND))
-    .then((card) => res.status(SUCCESS).send({ likes: card.likes }))
+    .populate(['likes', 'owner'])
+    .then((card) => res.status(SUCCESS).send(card))
     .catch(next);
 };
 
@@ -68,6 +74,7 @@ module.exports.dislikeCard = (req, res, next) => {
     { $pull: { likes: req.user._id } },
     { returnDocument: 'after' },
   ).orFail(new NotFoundError(MSG_CARD_NOT_FOUND))
-    .then((card) => res.status(SUCCESS).send({ likes: card.likes }))
+    .populate(['likes', 'owner'])
+    .then((card) => res.status(SUCCESS).send(card))
     .catch(next);
 };
